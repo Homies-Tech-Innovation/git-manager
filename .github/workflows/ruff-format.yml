@@ -1,0 +1,66 @@
+name: Ruff Python Formatter
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  ruff-format:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install Python and Ruff
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - run: pip install ruff
+
+      - name: Format Python files with Ruff
+        id: format
+        run: |
+          ruff format . --check --diff
+
+          # Capture the output of ruff to a variable
+          formatted_files=$(ruff format . --check --diff --quiet | grep 'would reformat' | wc -l)
+          echo "formatted_files=$formatted_files" >> $GITHUB_OUTPUT
+
+      - name: Check if files were formatted
+        if: steps.format.outputs.formatted_files > 0
+        run: |
+          echo "Changes were made by ruff. Committing and commenting..."
+
+      - name: Commit formatted files
+        if: steps.format.outputs.formatted_files > 0
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: formatted python files with ruff"
+          file_pattern: "*.py"
+          commit_author: "github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
+          commit_user_name: "github-actions[bot]"
+          commit_user_email: "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Comment on PR if files were formatted
+        if: steps.format.outputs.formatted_files > 0
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const formatted_files = process.env.FORMATTED_FILES;
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `✅ **Ruff formatted ${formatted_files} file(s).** The changes have been committed to this pull request.`
+            })
+        env:
+          FORMATTED_FILES: ${{ steps.format.outputs.formatted_files }}
