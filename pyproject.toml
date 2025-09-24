@@ -1,0 +1,7 @@
+[project]
+name = "git-manager"
+version = "0.1.0"
+description = "A GitHub automation toolkit powered by machine learning."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
