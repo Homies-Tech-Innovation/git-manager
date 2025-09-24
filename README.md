@@ -95,3 +95,18 @@ Distributed under the Mozilla Public License Version 2.0 License. See [`LICENSE`
 - **Open-source community** → Foundation for this project’s tools and practices.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+[contributors-shield]: https://img.shields.io/github/contributors/Homies-Tech-Innovation/git-manager
+[contributors-url]: ./graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/Homies-Tech-Innovation/git-manager
+[forks-url]: ./network/members
+[stars-shield]: https://img.shields.io/github/stars/Homies-Tech-Innovation/git-manager
+[stars-url]: ./stargazers
+[issues-shield]: https://img.shields.io/github/issues/Homies-Tech-Innovation/git-manager
+[issues-url]: ./issues
+[license-shield]: https://img.shields.io/github/license/Homies-Tech-Innovation/git-manager
+[license-url]: ./LICENSE
+[discord-shield]: https://img.shields.io/discord/1313767817996402698?logo=discord&logoColor=white&label=discord&color=4d3dff
+[discord-url]: https://discord.com/invite/HP2YPGSrWU
+[release-shield]: https://img.shields.io/github/v/release/Homies-Tech-Innovation/git-manager?include_prereleases
+[release-url]: ./releases
