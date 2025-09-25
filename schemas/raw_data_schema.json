@@ -1,0 +1,11 @@
+{
+	"doc": "original document",
+	"issues": [
+		{
+			"title": "Issue #1",
+			"body": "Issue Body",
+			"labels": ["sample label"],
+			"dependency": ["Issue X"]
+		}
+	]
+}
