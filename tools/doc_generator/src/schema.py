@@ -6,6 +6,7 @@ from typing import List
 class Issue(BaseModel):
     """Always use this tool to structure your response to the user."""
 
+    id: str = Field(description="A unique id per issue for identifier.")
     title: str = Field(description="A concise, descriptive title for the issue.")
     body: str = Field(
         description="A detailed description of the issue, explaining the problem or finding."

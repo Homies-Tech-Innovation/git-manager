@@ -23,14 +23,6 @@ Create a markdown document with these sections. Content must be brief and to the
 - Use descriptive titles.
 - **Dependency Rule:** Use the simple `id` field for tracking dependencies, NOT the `title`.
 
-**ISSUE STRUCTURE:**
-Each element in the 'issues' array requires these specific fields:
-- **id**: A short, unique, machine-readable identifier (e.g., "TASK_1", "TASK_2").
-- **title**: Descriptive title for developers.
-- **body**: Checklist items (- [ ] format), sprint info, dependencies, documentation references.
-- **labels**: Relevant technical labels (array of strings).
-- **dependency_ids**: Array of other **issue ids** this depends on (empty array if none).
-
 **QUALITY REQUIREMENTS (Prioritize Brevity):**
 - **Prioritize brevity.**
 - Include **only 1-2 small code snippets/examples** in the doc.
