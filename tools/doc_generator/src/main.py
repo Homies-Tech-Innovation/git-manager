@@ -170,4 +170,7 @@ logger.info("🚀 Graph compiled and ready.")
 
 # Execute
 if __name__ == "__main__":
-    document_processing_app.invoke({"document_index": 0, "llm_output_content": ""})
+    document_processing_app.invoke(
+        {"document_index": 0, "llm_output_content": ""},
+        {"recursion_limit": MAX_DOCUMENTS},
+    )
