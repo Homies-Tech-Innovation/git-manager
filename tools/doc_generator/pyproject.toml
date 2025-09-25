@@ -1,0 +1,12 @@
+[project]
+name = "doc_generator"
+version = "0.1.0"
+description = "This tool helps to generator data."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "langchain>=0.3.27",
+    "langchain-google-genai>=2.1.12",
+    "langgraph>=0.6.7",
+    "python-dotenv>=1.1.1",
+]
