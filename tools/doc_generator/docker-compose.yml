@@ -3,7 +3,6 @@ services:
   doc_generator:
     build: .
     restart: always
-    user: "${UID:-1000}:${GID:-1000}"
     volumes:
       - ./src/temp:/app/src/temp
     environment:
