@@ -26,22 +26,30 @@ jobs:
 
       - run: pip install ruff
 
-      - name: Format Python files with Ruff
-        id: format
+      - name: 🔍 Check for format changes with Ruff (Dry Run)
+        id: dry_run
         run: |
-          ruff format . --check --diff
+          # Run ruff format in check mode to see if any files need reformatting
+          # We use || true to prevent the workflow from failing if differences are found (ruff returns exit code 1)
+          ruff format . --check || true
 
-          # Capture the output of ruff to a variable
-          formatted_files=$(ruff format . --check --diff --quiet | grep 'would reformat' | wc -l)
+          # Capture the output of ruff in check mode to count files that need reformatting.
+          # We use the --quiet flag to only get the filenames.
+          # The output of `ruff format . --check --quiet` is a list of file paths that would be reformatted.
+          formatted_files=$(ruff format . --check --quiet | wc -l)
           echo "formatted_files=$formatted_files" >> $GITHUB_OUTPUT
 
-      - name: Check if files were formatted
-        if: steps.format.outputs.formatted_files > 0
+      - name: Apply formatting if changes found
+        if: steps.dry_run.outputs.formatted_files > 0
+        id: format_apply
         run: |
-          echo "Changes were made by ruff. Committing and commenting..."
+          echo "Changes were detected (${{ steps.dry_run.outputs.formatted_files }} files). Applying ruff format..."
+          # THIS IS THE CRITICAL CHANGE: Run ruff format WITHOUT --check or --diff to apply changes!
+          ruff format .
+          echo "Changes applied successfully."
 
-      - name: Commit formatted files
-        if: steps.format.outputs.formatted_files > 0
+      - name: 📝 Commit formatted files
+        if: steps.dry_run.outputs.formatted_files > 0
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "chore: formatted python files with ruff"
@@ -50,17 +58,17 @@ jobs:
           commit_user_name: "github-actions[bot]"
           commit_user_email: "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Comment on PR if files were formatted
-        if: steps.format.outputs.formatted_files > 0
+      - name: 💬 Comment on PR if files were formatted
+        if: steps.dry_run.outputs.formatted_files > 0
         uses: actions/github-script@v7
         with:
           script: |
-            const formatted_files = process.env.FORMATTED_FILES;
+            const formattedFilesCount = process.env.FORMATTED_FILES;
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `✅ **Ruff formatted ${formatted_files} file(s).** The changes have been committed to this pull request.`
+              body: `✅ **Ruff formatted ${formattedFilesCount} file(s).** The changes have been committed to this pull request.`
             })
         env:
-          FORMATTED_FILES: ${{ steps.format.outputs.formatted_files }}
+          FORMATTED_FILES: ${{ steps.dry_run.outputs.formatted_files }}
