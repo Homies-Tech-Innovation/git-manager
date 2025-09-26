@@ -32,6 +32,7 @@ class DocumentProcessor:
         self.llm = ChatGoogleGenerativeAI(model=Config.MODEL_NAME)
         self.structured_llm = self.llm.with_structured_output(DocumentIssues)
         self._ensure_output_dir()
+        self.starting_index = self._get_initial_index()  # Added functionality
 
         logger.info(
             f"Initialized processor │ model={Config.MODEL_NAME} │ max_docs={Config.MAX_DOCUMENTS} │ delay={Config.API_DELAY_SECONDS}s"
@@ -39,6 +40,29 @@ class DocumentProcessor:
 
     def _ensure_output_dir(self):
         os.makedirs(Config.OUTPUT_DIR, exist_ok=True)
+
+    def _get_initial_index(self) -> int:  # Added functionality
+        """Determines the starting index by checking existing files in the output directory."""
+        try:
+            # List files, filter for those matching the pattern, extract index, and find the max
+            processed_indices = []
+            for filename in os.listdir(Config.OUTPUT_DIR):
+                if filename.endswith("_doc.json") and filename[:-9].isdigit():
+                    try:
+                        # Filename format is "NNN_doc.json", where NNN is the index + 1
+                        index = int(filename.split("_")[0])
+                        processed_indices.append(index)
+                    except ValueError:
+                        continue  # Skip files that don't conform to the index part
+
+            if processed_indices:
+                max_filename_index = max(processed_indices)
+                return max_filename_index
+            else:
+                return 0  # Start from the beginning
+        except Exception as e:
+            logger.error(f"Error determining initial index: {str(e)}. Starting from 0.")
+            return 0
 
     def _generate_filename(self, index: int) -> str:
         return os.path.join(Config.OUTPUT_DIR, f"{index:03d}_doc.json")
@@ -85,8 +109,9 @@ class DocumentProcessor:
     def initialize_processing(
         self, state: DocumentProcessingState
     ) -> DocumentProcessingState:
-        logger.info("Processing initialized │ starting_index=0")
-        return {"document_index": 0, "llm_output_content": ""}
+        # Changed functionality to use self.starting_index
+        logger.info(f"Processing initialized │ starting_index={self.starting_index}")
+        return {"document_index": self.starting_index, "llm_output_content": ""}
 
     def invoke_llm_for_document(
         self, state: DocumentProcessingState
@@ -172,8 +197,9 @@ class DocumentProcessor:
 
         try:
             app = self.build_graph()
+            # Changed functionality to pass the initial state based on persistence check
             app.invoke(
-                {"document_index": 0, "llm_output_content": ""},
+                {"document_index": self.starting_index, "llm_output_content": ""},
                 {"recursion_limit": Config.MAX_DOCUMENTS + 5},
             )
 

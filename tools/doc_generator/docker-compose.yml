@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   doc_generator:
     build: .
@@ -6,4 +5,4 @@ services:
     volumes:
       - ./src/temp:/app/src/temp
     environment:
-      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
