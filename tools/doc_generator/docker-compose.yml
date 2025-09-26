@@ -1,7 +1,7 @@
 services:
   doc_generator:
     build: .
-    restart: always
+    restart: on-failure
     volumes:
       - ./src/temp:/app/src/temp
     environment:
