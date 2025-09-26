@@ -36,4 +36,9 @@ Create a markdown document with these sections. Content must be brief and to the
 **TECHNICAL CONTEXT:** [CONTEXT_PLACEHOLDER]
 
 Generate a concise implementation document with exactly 4 actionable GitHub issues. Output only valid JSON.
+
+**TOPIC SELECTION RULES:**
+- For each new document, invent a fresh topic related to general software development (e.g., APIs, databases, frontend optimization, CI/CD, cloud infra, etc.).
+- Do not repeat topics across runs.
+- Avoid defaulting to JWT, authentication, or authorization unless explicitly asked.
 """
