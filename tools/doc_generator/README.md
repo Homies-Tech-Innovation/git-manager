@@ -33,7 +33,7 @@ The service requires the `GEMINI_API_KEY` environment variable for operation.
 
 Before running the document generator, you must configure the topics to be processed:
 
-1. **Select Topics:** Navigate to `features/issue_generation/data/topics.py` and review the available topic lists.
+1. **Select Topics:** Navigate to `features/issue_generation/data/topics.json` and review the available topic lists.
 
 2. **Copy Topics:** Choose your desired topic list and copy it to `src/topics.py` with the variable name `topics`.
 
